@@ -33,15 +33,16 @@ body {
     text-align: center;
   }
   .div1 {
-    background: darken($backgroundColor, 15);
-    height: 30%;
+    background: darken($backgroundColor, 30);
+    height: 32%;
     margin-right: 10%;
     margin-left: 10%;
     position: absolute;
     top: 59%;
     right: 11%;
     width: 60%;
-    border: 2px solid darken($backgroundColor, 30);
+    border: 2px solid darken($backgroundColor, 60);
+    color: darken($backgroundColor, 70);
 
 
 

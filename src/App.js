@@ -1,91 +1,66 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import "./app.scss";
 import "./compononts/Result/result.scss";
-
-// Let's talk about using index.js and some other name in the component folder
-// There's pros and cons for each way of doing this ...
 import Header from "./compononts/header";
 import Footer from "./compononts/Footer";
 import Form from "./compononts/Form";
 import Results from "./compononts/Result";
 import axios from "axios";
-import { toIdSchema } from "react-jsonschema-form/lib/utils";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: null,
-      requestParams: {},
-      count:0,
-     Header: [
-            {
-              root: "fakeData",
-              cache_control: "string public",
-              age: "86400",
-              s_maxage: "86400",
-            },]
-    };
-  }
-
-  callApi = async (requestParams, updateBody) => {
+export default function App() {
+  let [data, setData] = useState(null);
+  let [requestParams, setrequestParams] = useState({});
+  let [header, setHeader] = useState({});
+  const [state, setState] = useState(false);
+  let [reqBody, setBody] = useState("");
 
 
-    const respond= await axios.get(requestParams.url)
-    console.log(respond.data);
-    // mock output
-    // const data = {
-    //   count: 2,
-    //   Header: [
-    //     {
-    //       root: "fakeData",
-    //       cache_control: "string public",
-    //       age: "86400",
-    //       s_maxage: "86400",
-    //     },
-    //   ],
-    //   Results: [
-    //     { name: "fake thing 1", url: "http://fakethings.com/1" },
-    //     { name: "fake thing 2", url: "http://fakethings.com/2" },
-    //   ],
-    // };
-    
-
-    this.setState({ data:respond.data.results, requestParams,count:respond.data.count });
-
-    const update = {
-      count: 2,
-      Header: [
-        {
-          root: "fakeData",
-          cache_control: "string public",
-          age: "86400",
-          s_maxage: "86400",
-        },
-      ],
-      Results: [{ body: updateBody }],
-    };
-    if (updateBody) {
-      this.setState({ data: update });
-    }
+  const callApi = async (requestParams, requestBody) => {
+    setrequestParams(requestParams);
+    setBody(requestBody);
+    setHeader({
+      root: requestParams.url,
+      cache_control: "string public",
+      age: "86400",
+      s_maxage: "86400",
+    });
   };
+  useEffect(async () => {
+    const requestforCreate = {
+      body: reqBody,
+    };
+    let respond;
+    if (requestParams.url) {
+      setData(null);
+      requestParams.method == "get"
+        ? (respond = await axios.get(requestParams.url))
+        : (respond = await axios.post(
+            requestParams.url,
+            requestforCreate.body
+          ));
+      setData(respond.data);
+    }
+  }, [requestParams.method, requestParams.url]);
+  console.log();
 
-  render() {
-    return (
-      <React.Fragment>
-        <Header />
-        <div className="div1" data-testid="url">
-          {" "}
-          {this.state.requestParams.method} {this.state.requestParams.url}
-        </div>
-        
-        <Form handleApiCall={this.callApi} />
-        <Results data={this.state.data} count={this.state.count} header={this.state.Header}/>
-        <Footer />
-      </React.Fragment>
-    );
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      setState(!state);
+    }, 5000);
+  }, [data]);
+
+
+  return (
+    <React.Fragment>
+      <Header />
+      <div className="div1" data-testid="url">
+        {" "}
+        {requestParams.method} {requestParams.url}
+      </div>
+
+      <Form handleApiCall={callApi} />
+      <Results data={data}  header={header} state={state} />
+      <Footer />
+    </React.Fragment>
+  );
 }
-
-export default App;
