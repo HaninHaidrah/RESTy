@@ -1,14 +1,40 @@
-import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
-import Form from "./index";
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import App from "../../App";
+import Form from './index';
+import Results from '../Result/index'
+import '@testing-library/jest-dom/extend-expect';
 
-test("If it takes the request url", async () => {
-  render(<App />);
+it('need to run a function on button click', async () => {
+  let callApi = jest.fn();
+  render(<Form handleApiCall={callApi} />);
+  const button = screen.getByTestId('butt');
+  fireEvent.click(button);
+  await waitFor(() => expect(callApi).toHaveBeenCalled());
+});
 
-  const url = screen.getByTestId("url");
+it('Should render results', () => {
+  const result = {
+    "Headers": {
+      "content-type": "string application/json"
+    },
+    "count": 2,
+    "results": [
+      {
+        "name": "fake thing 1",
+        "url": "http://fakethings.com/1"
+      },
+      {
+        "name": "fake thing 2",
+        "url": "http://fakethings.com/2"
+      }
+    ]
+  };
 
-  expect(url).toHaveValue("https://pokeapi.co/api/v2/pokemon%22");
+  render(<Results data={result} />);
+
+  const items = screen.getByTestId('renderedData');
+
+  expect(items).toHaveTextContent('fake thing 1');
+  expect(items).toHaveTextContent('http://fakethings.com/2');
+  expect(items).toHaveTextContent('Headers');
 });

@@ -46,7 +46,7 @@ export default function Form({ handleApiCall }) {
   };
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} date-testid="submit">
         <label>
           <span>URL: </span>
           <input name="url" type="text" onChange={getUrl} />
