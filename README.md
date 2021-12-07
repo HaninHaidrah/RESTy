@@ -1,13 +1,10 @@
 # RESTy
 
 ## link to repo:  https://github.com/HaninHaidrah/RESTy 
-## link to deploy: It took time and then gave me this error , so I took img for the result locally
-![img ](deploy.png) 
-## link to pull request: https://github.com/HaninHaidrah/RESTy/pull/1
+## link to deploy: https://xenodochial-wilson-08f9e3.netlify.app/ 
+## link to pull request: https://github.com/HaninHaidrah/RESTy/pull/3
+## link to gh page :
 
 
 ## UML : 
 ![img](UML.jpg)
-![img](result.png) because the deploy not work fine
-![img](resultpostandput.png)
-![img](test.png)
