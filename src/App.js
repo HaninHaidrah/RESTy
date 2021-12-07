@@ -10,6 +10,7 @@ import Footer from "./compononts/Footer";
 import Form from "./compononts/Form";
 import Results from "./compononts/Result";
 import axios from "axios";
+import { toIdSchema } from "react-jsonschema-form/lib/utils";
 
 class App extends React.Component {
   constructor(props) {
@@ -17,32 +18,41 @@ class App extends React.Component {
     this.state = {
       data: null,
       requestParams: {},
+      count:0,
+     Header: [
+            {
+              root: "fakeData",
+              cache_control: "string public",
+              age: "86400",
+              s_maxage: "86400",
+            },]
     };
   }
 
-  callApi = (requestParams, updateBody) => {
+  callApi = async (requestParams, updateBody) => {
 
 
-    const respond= await axios.get()
+    const respond= await axios.get(requestParams.url)
+    console.log(respond.data);
     // mock output
-    const data = {
-      count: 2,
-      Header: [
-        {
-          root: "fakeData",
-          cache_control: "string public",
-          age: "86400",
-          s_maxage: "86400",
-        },
-      ],
-      Results: [
-        { name: "fake thing 1", url: "http://fakethings.com/1" },
-        { name: "fake thing 2", url: "http://fakethings.com/2" },
-      ],
-    };
+    // const data = {
+    //   count: 2,
+    //   Header: [
+    //     {
+    //       root: "fakeData",
+    //       cache_control: "string public",
+    //       age: "86400",
+    //       s_maxage: "86400",
+    //     },
+    //   ],
+    //   Results: [
+    //     { name: "fake thing 1", url: "http://fakethings.com/1" },
+    //     { name: "fake thing 2", url: "http://fakethings.com/2" },
+    //   ],
+    // };
     
 
-    this.setState({ data, requestParams });
+    this.setState({ data:respond.data.results, requestParams,count:respond.data.count });
 
     const update = {
       count: 2,
@@ -71,7 +81,7 @@ class App extends React.Component {
         </div>
         
         <Form handleApiCall={this.callApi} />
-        <Results data={this.state.data} />
+        <Results data={this.state.data} count={this.state.count} header={this.state.Header}/>
         <Footer />
       </React.Fragment>
     );
