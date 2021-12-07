@@ -7,7 +7,7 @@ import LoadingSpinner from "../loading/loading";
 
 function Results(data) {
   return (
-    <section className="result">
+    <section className="result" data-testid="renderedData">
     <pre>{data.data ? <JSONPretty data={data} /> : <LoadingSpinner/>}</pre>
     </section>
   );
