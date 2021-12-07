@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import "./loading.scss";
 const LoadingSpinner = () => (
   <div className="loading_spinner-wrap">
