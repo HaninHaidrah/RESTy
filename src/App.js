@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./app.scss";
-import "./compononts/Result/result.scss";
+// import "./compononts/Result/result.scss";
 import Header from "./compononts/header";
 import Footer from "./compononts/Footer";
 import Form from "./compononts/Form";
