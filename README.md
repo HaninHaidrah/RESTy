@@ -9,3 +9,5 @@
 ## UML : 
 ![img](UML.jpg)
 ![img](result.png) because the deploy not work fine
+![img](resultpostandput.png)
+![img](test.png)
