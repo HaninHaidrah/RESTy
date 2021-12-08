@@ -8,6 +8,7 @@ export default function Form({ handleApiCall }) {
   const [showTextArea, setShowArea] = useState(false);
   let [requestBody, setrequestBody] = useState("");
   let [loading, setLoading] = useState(false);
+  
   const colors = {
     darkest: "#461111",
     ligth: "#A13333",
