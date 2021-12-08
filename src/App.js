@@ -1,66 +1,102 @@
-import React, { useState, useEffect } from "react";
+import React, { useReducer } from "react";
 import "./app.scss";
-// import "./compononts/Result/result.scss";
 import Header from "./compononts/header";
 import Footer from "./compononts/Footer";
 import Form from "./compononts/Form";
 import Results from "./compononts/Result";
+import History from "./compononts/History";
 import axios from "axios";
+let initialhist = [];
+
+let reducer2 = (history = initialhist, action) => {
+  let { type, payload } = action;
+  switch (type) {
+    case "addToHistory":
+      history = [...history, payload];
+      return history;
+    default:
+      return state;
+  }
+};
+const intial = {
+  url: "",
+  method: "",
+  result: "null",
+};
+
+let reducer = (state = intial, action) => {
+  let { type, payload } = action;
+  switch (type) {
+    case "reqParams":
+      return {
+        ...state,
+        url: payload.url,
+        method: payload.method,
+        result: payload.result,
+      };
+    default:
+      return state;
+  }
+};
+
+// handle payload for reqParams:
+const params = (url, method, result) => {
+  return {
+    type: "reqParams",
+    payload: {
+      url,
+      method,
+      result,
+    },
+  };
+};
+const historyAdd = (url, method, result) => {
+  return {
+    type: "addToHistory",
+    payload: {
+      url,
+      method,
+      result,
+    },
+  };
+};
 
 export default function App() {
-  let [data, setData] = useState(null);
-  let [requestParams, setrequestParams] = useState({});
-  let [header, setHeader] = useState({});
-  const [state, setState] = useState(false);
-  let [reqBody, setBody] = useState("");
-
+  const [vars, dispatch] = useReducer(reducer, intial);
+  const [history, dispatch2] = useReducer(reducer2, initialhist);
 
   const callApi = async (requestParams, requestBody) => {
-    setrequestParams(requestParams);
-    setBody(requestBody);
-    setHeader({
-      root: requestParams.url,
-      cache_control: "string public",
-      age: "86400",
-      s_maxage: "86400",
-    });
+    //get the url and method:
+    dispatch(params(requestParams.url, requestParams.method));
+
+    // to get the results and then save them :
+    let respond = await axios.get(requestParams.url);
+    dispatch(params(requestParams.url, requestParams.method, respond.data));
+    dispatch2(
+      historyAdd(requestParams.url, requestParams.method, respond.data)
+    );
   };
-  useEffect(async () => {
-    const requestforCreate = {
-      body: reqBody,
-    };
-    let respond;
-    if (requestParams.url) {
-      setData(null);
-      requestParams.method == "get"
-        ? (respond = await axios.get(requestParams.url))
-        : (respond = await axios.post(
-            requestParams.url,
-            requestforCreate.body
-          ));
-      setData(respond.data);
-    }
-  }, [requestParams.method, requestParams.url]);
-  console.log();
+  console.log(vars);
+  console.log(history);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setState(!state);
-    }, 5000);
-  }, [data]);
-
-
+  function historyfunc(url, method, result) {
+    dispatch(params(url, method, result));
+  }
   return (
-    <React.Fragment>
-      <Header />
-      <div className="div1" data-testid="url">
-        {" "}
-        {requestParams.method} {requestParams.url}
-      </div>
+    <>
+      <React.Fragment>
+        <Header />
+        <div className="div1" data-testid="url">
+          {" "}
+          {vars.method} {vars.url}
+        </div>
 
-      <Form handleApiCall={callApi} />
-      <Results data={data}  header={header} state={state} />
-      <Footer />
-    </React.Fragment>
+        <Form handleApiCall={callApi} />
+        {history && <History historyfunc={historyfunc} history={history} />}
+
+        <Results data={vars.result} />
+        <Footer />
+      </React.Fragment>
+    </>
   );
 }

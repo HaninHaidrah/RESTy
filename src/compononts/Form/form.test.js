@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import React from "react"
+import React from "react";
 import Form from './index';
 import Results from '../Result/index'
 import '@testing-library/jest-dom/extend-expect';
