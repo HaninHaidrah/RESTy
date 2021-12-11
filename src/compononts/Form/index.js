@@ -53,10 +53,10 @@ export default function Form({ handleApiCall }) {
           <button type="submit" data-testid="butt">GO!</button>
         </label>
         <label className="methods">
-          <button id="get" onClick={handleGetMethod}>
+          <button id="get" data-testid='getbutt' onClick={handleGetMethod}>
             GET
           </button>
-          <button id="post" onClick={handleShowText}>
+          <button id="post" data-testid='postButt' onClick={handleShowText}>
             POST
           </button>
           <button id="put" onClick={handleShowText}>
